@@ -8,6 +8,7 @@ use crate::{
 #[utoipa::path(
     post,
     path = "/v1/user",
+    tag = "users",
     request_body = UserRequest,
     responses(
         (status = 201, description = "User created successfully", body = UserResponse),

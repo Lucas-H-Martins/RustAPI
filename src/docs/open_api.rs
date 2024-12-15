@@ -1,11 +1,16 @@
 use utoipa::OpenApi;
 
-use crate::resources::users::{controllers as user_ctl, models as user_model};
+use crate::resources::users::docs::UserApiDoc;
 
 #[derive(OpenApi)]
-#[openapi(
-    paths(user_ctl::create_user),
-    components(schemas(user_model::UserRequest, user_model::UserResponse)),
-    info(title = "RustAPI", version = "1.0.0")
-)]
-pub struct ApiDoc;
+#[openapi(info(title = "RustAPI example", version = "1.0.0"))]
+pub struct BaseApiDoc;
+
+pub fn build_openapi() -> utoipa::openapi::OpenApi {
+    let mut openapi = BaseApiDoc::openapi();
+
+    // merge all docs here
+    openapi.merge(UserApiDoc::openapi());
+
+    return openapi
+}
