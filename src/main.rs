@@ -1,16 +1,19 @@
+mod docs;
 mod errors;
 mod infrastructure;
 mod middlewares;
 mod resources;
-
 use std::io;
 
-use actix_web::{middleware, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 
+use docs::open_api::ApiDoc;
 use infrastructure::{configure_env, configure_logger};
 use resources::users::routes::user_routes;
 // use routes::users::{create_user, welcome};
 use tracing::info;
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
@@ -28,7 +31,11 @@ async fn main() -> io::Result<()> {
             .wrap(middleware::Compress::default())
             // // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
-            .configure(user_routes)
+            .configure(user_routes) // Serve the OpenAPI spec as JSON
+            .service(
+                SwaggerUi::new("/swagger-ui/{_:.*}")
+                    .url("/api-docs/openapi.json", ApiDoc::openapi()),
+            )
     })
     .bind(("127.0.0.1", 8080))?
     .workers(2)
