@@ -1,5 +1,9 @@
 # RustAPI
 
+
+
+
+Estrutura de pasta
 .
 ├── Cargo.toml                  # Configuração do projeto e dependências
 ├── src/
@@ -13,6 +17,8 @@
 │   │   └── user_service.rs     # Serviços relacionados a usuários
 │   ├── infrastructure/         # Integrações externas e configurações de infraestrutura
 │   │   ├── mod.rs              # Organiza a infraestrutura
+│   │   ├── environment.rs      # Setup das variaveis ambientes
+│   │   ├── logger.rs           # Setup do logger da aplicação
 │   │   └── postgres.rs         # Configuração e operações do banco de dados PostgreSQL
 │   ├── middlewares/            # Middlewares para manipulação de requisições/respostas
 │   │   ├── mod.rs              # Organiza os middlewares
