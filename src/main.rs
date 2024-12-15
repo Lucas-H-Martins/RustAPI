@@ -1,18 +1,16 @@
+mod errors;
+mod infrastructure;
+mod middlewares;
+mod resources;
+
 use std::io;
 
 use actix_web::{middleware, App, HttpServer};
 
 use infrastructure::{configure_env, configure_logger};
-
-use routes::users::create_user;
+use resources::users::routes::user_routes;
 // use routes::users::{create_user, welcome};
 use tracing::info;
-
-mod errors;
-mod infrastructure;
-mod middlewares;
-mod models;
-mod routes;
 
 #[actix_web::main]
 async fn main() -> io::Result<()> {
@@ -30,7 +28,7 @@ async fn main() -> io::Result<()> {
             .wrap(middleware::Compress::default())
             // // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
-            .service(create_user)
+            .configure(user_routes)
     })
     .bind(("127.0.0.1", 8080))?
     .workers(2)
