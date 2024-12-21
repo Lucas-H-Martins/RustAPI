@@ -39,11 +39,11 @@ impl UserServices for UserServicesImpl {
             }
         };
         Ok(UserCreateResponse {
-            id: user.id,
+            id: user.id.to_string(),
             name: user.name,
             email: user.email,
-            created_at: user.created_at,
-            updated_at: user.updated_at,
+            created_at: user.created_at.to_string(),
+            updated_at: user.updated_at.to_string(),
         })
     }
 }

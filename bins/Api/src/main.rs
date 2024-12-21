@@ -9,7 +9,7 @@ use std::{
 use actix_web::{middleware, web, App, HttpServer};
 use infrastructure::{Config, Database, PostgresDB};
 use repositories::users::UsersRepositorioImpl;
-use resources::users::{routes::user_routes, services::UserServicesImpl};
+use resources::users::{routes::user_routes, services::UserServicesImpl, UserServices};
 use tracing::info;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -34,7 +34,7 @@ async fn main() -> Result<(), Error> {
     // repositorys
     let user_repository = Arc::new(UsersRepositorioImpl::new(db_con));
     // sevices
-    let user_service = Arc::new(UserServicesImpl::new(user_repository));
+    let user_service: Arc<dyn UserServices> = Arc::new(UserServicesImpl::new(user_repository));
 
     //init api
     info!("starting HTTP server at http://localhost:8080");
@@ -44,7 +44,7 @@ async fn main() -> Result<(), Error> {
             .wrap(middleware::Compress::default())
             .wrap(middleware::Logger::default())
             //inject all dependences using macro app_data
-            .app_data(web::Data::from(user_service.clone()))
+            .app_data(web::Data::new(user_service.clone()))
             //let here to call for routes of aplication (resourses)
             .configure(user_routes)
             // Serve the OpenAPI

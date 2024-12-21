@@ -33,7 +33,12 @@ impl UserRepository for UsersRepositorioImpl {
         match result {
             Ok(user) => Ok(user),
             Err(err) => {
-                error!("failed to create ser for user: {:?}", user_infos);
+                error!(
+                    "failed to create ser for user: {:?} error:{}",
+                    user_infos,
+                    err.to_string()
+                );
+
                 Err(CustomErrors::DatabaseError(err.to_string()))
             }
         }

@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use actix_web::{
     web::{Data, Json},
     HttpResponse, Responder,
@@ -21,7 +23,7 @@ use super::UserServices;
 )]
 pub async fn create_user(
     body: Json<UserCreateRequest>,
-    services: Data<dyn UserServices>,
+    user_service: Data<Arc<dyn UserServices>>,
 ) -> impl Responder {
     let user_infos = body.into_inner();
 
@@ -30,7 +32,7 @@ pub async fn create_user(
     }
 
     //call here to service
-    match services.create_user(&user_infos).await {
+    match user_service.create_user(&user_infos).await {
         Ok(user) => return HttpResponse::Created().json(user),
         Err(err) => {
             error!("failed to process service err:{}", err);

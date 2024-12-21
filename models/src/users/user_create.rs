@@ -8,8 +8,6 @@ pub struct UserCreateRequest {
     pub name: String,
     #[validate(email)]
     pub email: String,
-    #[validate(range(min = 13))]
-    pub age: u32,
 }
 
 #[derive(Debug, Deserialize, Serialize, ToSchema)]

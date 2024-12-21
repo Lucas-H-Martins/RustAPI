@@ -7,4 +7,6 @@ edition = "2021"
 validator = { workspace = true }
 utoipa = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
-sqlx = { workspace = true }
+sqlx = { workspace = true, features = ["uuid"] }
+uuid = { workspace = true, features = ["serde"] }
+chrono = { workspace = true, features = ["serde"] }
