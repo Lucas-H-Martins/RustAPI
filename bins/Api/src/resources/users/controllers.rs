@@ -1,21 +1,20 @@
 use actix_web::{web::Json, HttpResponse, Responder};
 
-use crate::{
-    middlewares::validate::validate_input,
-    resources::users::models::{UserRequest, UserResponse},
-};
+use crate::middlewares::validate::validate_input;
+
+use super::models::{UserCreateRequest, UserCreateResponse};
 
 #[utoipa::path(
     post,
     path = "/v1/user",
     tag = "users",
-    request_body = UserRequest,
+    request_body = UserCreateRequest,
     responses(
-        (status = 201, description = "User created successfully", body = UserResponse),
+        (status = 201, description = "User created successfully", body = UserCreateResponse),
         (status = 400, description = "Validation error")
     )
 )]
-pub async fn create_user(body: Json<UserRequest>) -> impl Responder {
+pub async fn create_user(body: Json<UserCreateRequest>) -> impl Responder {
     let user = body.into_inner();
 
     if let Err(response) = validate_input(&user) {

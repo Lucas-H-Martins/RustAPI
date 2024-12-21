@@ -1,10 +1,10 @@
 use std::env;
 
+use commons::error::CustomErrors;
 use tracing::{info, level_filters::LevelFilter};
 
-use crate::errors::Errors;
 
-pub fn configure_logger() -> Result<(), Errors> {
+pub fn configure_logger() -> Result<(), CustomErrors> {
     // Lê a variável de ambiente LOG_LEVEL. Se não estiver definida, usa "info" como padrão.
     let log_level = env::var("LOG_LEVEL").unwrap_or_else(|_| "info".to_string());
 

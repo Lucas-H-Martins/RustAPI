@@ -1,6 +1,4 @@
 mod docs;
-mod errors;
-mod infrastructure;
 mod middlewares;
 mod resources;
 use std::io;
@@ -9,7 +7,7 @@ use actix_web::{middleware, App, HttpServer};
 
 use infrastructure::{configure_env, configure_logger};
 use resources::users::routes::user_routes;
-// use routes::users::{create_user, welcome};
+
 use tracing::info;
 
 use utoipa_swagger_ui::SwaggerUi;
@@ -26,9 +24,7 @@ async fn main() -> io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
-            // enable automatic response compression - usually register this first
             .wrap(middleware::Compress::default())
-            // // enable logger - always register Actix Web Logger middleware last
             .wrap(middleware::Logger::default())
             .configure(user_routes)
             // Serve the OpenAPI

@@ -1,8 +1,9 @@
 use std::env;
 
-use crate::errors::Errors;
+use commons::error::CustomErrors;
 
-pub fn configure_env() -> Result<(), Errors> {
+
+pub fn configure_env() -> Result<(), CustomErrors> {
     let rust_env = env::var("RUST_ENV").unwrap_or_else(|_| "develop".to_string());
 
     let env_file = match rust_env.as_str() {
@@ -14,7 +15,7 @@ pub fn configure_env() -> Result<(), Errors> {
 
     match dotenv::from_filename(env_file) {
         Ok(_) => Ok(()),
-        Err(error) => Err(Errors::EnvFileNotFound(error.to_string())),
+        Err(error) => Err(CustomErrors::EnvFileNotFound(error.to_string())),
     }
 }
 

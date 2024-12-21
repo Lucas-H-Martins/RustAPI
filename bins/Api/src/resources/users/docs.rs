@@ -5,7 +5,7 @@ use crate::resources::users::{controllers as user_ctl, models as user_model};
 #[derive(OpenApi)]
 #[openapi(
     paths(user_ctl::create_user),
-    components(schemas(user_model::UserRequest, user_model::UserResponse)),
+    components(schemas(user_model::UserCreateRequest, user_model::UserCreateResponse)),
     tags(
         (name = "users", description = "User endpoints."),
       ),
