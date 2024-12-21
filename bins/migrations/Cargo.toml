@@ -4,4 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+infrastructure = { path = "../../infrastructure" }
+commons = { path = "../../commons" }
 
+sqlx = { workspace = true, features = [
+    "runtime-tokio-native-tls",
+    "postgres",
+    "migrate",
+] }
+tokio = { workspace = true, features = ["full"] }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[build-dependencies]
+sqlx-cli = { workspace = true, features = ["native-tls", "postgres"] }
