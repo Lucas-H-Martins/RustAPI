@@ -1,7 +1,13 @@
-use actix_web::{web::Json, HttpResponse, Responder};
+use actix_web::{
+    web::{Data, Json},
+    HttpResponse, Responder,
+};
 use models::users::{UserCreateRequest, UserCreateResponse};
+use tracing::error;
 
-use crate::middlewares::validate::validate_input;
+use crate::middlewares::validate_input;
+
+use super::UserServices;
 
 #[utoipa::path(
     post,
@@ -13,12 +19,22 @@ use crate::middlewares::validate::validate_input;
         (status = 400, description = "Validation error")
     )
 )]
-pub async fn create_user(body: Json<UserCreateRequest>) -> impl Responder {
-    let user = body.into_inner();
+pub async fn create_user(
+    body: Json<UserCreateRequest>,
+    services: Data<dyn UserServices>,
+) -> impl Responder {
+    let user_infos = body.into_inner();
 
-    if let Err(response) = validate_input(&user) {
-        return response;
+    if let Err(err) = validate_input(&user_infos) {
+        return HttpResponse::from(err);
     }
 
-    HttpResponse::Created().json(user)
+    //call here to service
+    match services.create_user(&user_infos).await {
+        Ok(user) => return HttpResponse::Created().json(user),
+        Err(err) => {
+            error!("failed to process service err:{}", err);
+            return HttpResponse::from(err);
+        }
+    };
 }

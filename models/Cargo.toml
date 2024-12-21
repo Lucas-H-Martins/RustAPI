@@ -6,4 +6,5 @@ edition = "2021"
 [dependencies]
 validator = { workspace = true }
 utoipa = { workspace = true }
-serde = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+sqlx = { workspace = true }

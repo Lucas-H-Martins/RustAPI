@@ -6,13 +6,11 @@ use std::{
     sync::Arc,
 };
 
-use actix_web::{middleware, App, HttpServer};
-
+use actix_web::{middleware, web, App, HttpServer};
 use infrastructure::{Config, Database, PostgresDB};
-use resources::users::routes::user_routes;
-
+use repositories::users::UsersRepositorioImpl;
+use resources::users::{routes::user_routes, services::UserServicesImpl};
 use tracing::info;
-
 use utoipa_swagger_ui::SwaggerUi;
 
 #[actix_web::main]
@@ -26,12 +24,17 @@ async fn main() -> Result<(), Error> {
     };
 
     let db_con = match PostgresDB::connect(config).await {
-        Ok(pool) => Arc::new(pool),
+        Ok(pool) => pool,
         Err(err) => {
             tracing::error!("Error to configure database: {}", err);
             return Err(Error::new(ErrorKind::Other, err));
         }
     };
+
+    // repositorys
+    let user_repository = Arc::new(UsersRepositorioImpl::new(db_con));
+    // sevices
+    let user_service = Arc::new(UserServicesImpl::new(user_repository));
 
     //init api
     info!("starting HTTP server at http://localhost:8080");
@@ -40,6 +43,8 @@ async fn main() -> Result<(), Error> {
         App::new()
             .wrap(middleware::Compress::default())
             .wrap(middleware::Logger::default())
+            //inject all dependences using macro app_data
+            .app_data(web::Data::from(user_service.clone()))
             //let here to call for routes of aplication (resourses)
             .configure(user_routes)
             // Serve the OpenAPI

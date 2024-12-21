@@ -29,3 +29,4 @@ utoipa-swagger-ui = { workspace = true, features = [
     "debug-embed",
 ] }
 async-trait = { workspace = true }
+sqlx = { workspace = true, features = ["postgres"] }

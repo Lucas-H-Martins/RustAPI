@@ -5,18 +5,18 @@ use validator::Validate;
 #[derive(Debug, Deserialize, Validate, Serialize, ToSchema)]
 pub struct UserCreateRequest {
     #[validate(length(min = 3))]
-    name: String,
+    pub name: String,
     #[validate(email)]
-    email: String,
+    pub email: String,
     #[validate(range(min = 13))]
-    age: u32,
+    pub age: u32,
 }
 
 #[derive(Debug, Deserialize, Serialize, ToSchema)]
 pub struct UserCreateResponse {
-    id: i32,
-    name: String,
-    email: String,
-    age: u32,
-    created_at: String,
+    pub id: String,
+    pub name: String,
+    pub email: String,
+    pub created_at: String,
+    pub updated_at: String,
 }
