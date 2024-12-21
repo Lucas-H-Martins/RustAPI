@@ -1,13 +1,15 @@
 use async_trait::async_trait;
 use sqlx::{postgres::PgPoolOptions, Pool, Postgres};
-use std::env;
 use tracing::info;
 
+use crate::Config;
+// todo 
+// for high level software need a abstration for another tipes of database, i am not using this, but another abstration here is needed.
 #[async_trait]
 pub trait Database {
     fn pool(&self) -> &Pool<Postgres>;
 
-    async fn connect() -> Result<Self, sqlx::Error>
+    async fn connect(config: Config) -> Result<Pool<Postgres>, sqlx::Error>
     where
         Self: Sized;
 }
@@ -22,20 +24,18 @@ impl Database for PostgresDB {
         &self.pool
     }
 
-    async fn connect() -> Result<Self, sqlx::Error> {
-        let user = env::var("POSTGRES_USER").unwrap_or_else(|_| "postgres".to_string());
-        let password = env::var("POSTGRES_PASS").unwrap_or_else(|_| "postgres".to_string());
-        let host = env::var("POSTGRES_HOST").unwrap_or_else(|_| "localhost".to_string());
-        let port = env::var("POSTGRES_PORT").unwrap_or_else(|_| "5432".to_string());
-        let database = env::var("POSTGRES_DB").unwrap_or_else(|_| "postgres".to_string());
-
+    async fn connect(config: Config) -> Result<Pool<Postgres>, sqlx::Error> {
         let database_url = format!(
             "postgres://{}:{}@{}:{}/{}",
-            user, password, host, port, database
+            config.database.user,
+            config.database.pass,
+            config.database.host,
+            config.database.port,
+            config.database.db
         );
         info!(
             "Connecting in database with host {} on port {}.",
-            host, port
+            config.database.host, config.database.port
         );
 
         let pool = PgPoolOptions::new()
@@ -43,6 +43,6 @@ impl Database for PostgresDB {
             .connect(&database_url)
             .await?;
 
-        Ok(Self { pool })
+        Ok(pool)
     }
 }

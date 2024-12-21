@@ -1,5 +1,7 @@
 pub mod controllers;
+pub mod docs;
 pub mod routes;
 pub mod services;
-pub mod docs;
-mod models;
+mod traits;
+
+pub use traits::UserServices;

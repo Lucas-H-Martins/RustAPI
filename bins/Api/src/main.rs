@@ -1,11 +1,14 @@
 mod docs;
 mod middlewares;
 mod resources;
-use std::io;
+use std::{
+    io::{Error, ErrorKind},
+    sync::Arc,
+};
 
 use actix_web::{middleware, App, HttpServer};
 
-use infrastructure::{configure_env, configure_logger};
+use infrastructure::{Config, Database, PostgresDB};
 use resources::users::routes::user_routes;
 
 use tracing::info;
@@ -13,11 +16,22 @@ use tracing::info;
 use utoipa_swagger_ui::SwaggerUi;
 
 #[actix_web::main]
-async fn main() -> io::Result<()> {
-    // configure env file
-    let _ = configure_env();
-    // configure logger
-    let _ = configure_logger();
+async fn main() -> Result<(), Error> {
+    let config = match Config::from_env() {
+        Ok(config) => config,
+        Err(err) => {
+            tracing::error!("Error to load configs: {}", err);
+            return Err(Error::new(ErrorKind::Other, err));
+        }
+    };
+
+    let db_con = match PostgresDB::connect(config).await {
+        Ok(pool) => Arc::new(pool),
+        Err(err) => {
+            tracing::error!("Error to configure database: {}", err);
+            return Err(Error::new(ErrorKind::Other, err));
+        }
+    };
 
     //init api
     info!("starting HTTP server at http://localhost:8080");
@@ -26,6 +40,7 @@ async fn main() -> io::Result<()> {
         App::new()
             .wrap(middleware::Compress::default())
             .wrap(middleware::Logger::default())
+            //let here to call for routes of aplication (resourses)
             .configure(user_routes)
             // Serve the OpenAPI
             .service(

@@ -5,6 +5,9 @@ edition = "2021"
 
 [dependencies]
 infrastructure = { path = "../../infrastructure" }
+commons = { path = "../../commons" }
+models = { path = "../../models" }
+repositories = { path = "../../repositories" }
 
 validator = { workspace = true, features = ['derive'] }
 serde = { workspace = true, features = ["derive"] }
@@ -25,3 +28,4 @@ utoipa-swagger-ui = { workspace = true, features = [
     "actix-web",
     "debug-embed",
 ] }
+async-trait = { workspace = true }

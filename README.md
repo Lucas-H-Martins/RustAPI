@@ -1,9 +1,21 @@
 # RustAPI
 
+Estrutura Proposta para a Aplicação
+
+Handler (Controller):
+Recebe as solicitações HTTP, valida os dados de entrada, e delega as operações para o serviço correspondente.
+
+Service:
+Contém a lógica de negócios. Este é o núcleo onde todas as regras do domínio são aplicadas.
+
+Repository:
+Realiza operações no banco de dados ou em qualquer outra camada de persistência.
+
+Models:
+Representam os dados do domínio, tanto as entradas (DTOs) quanto as saídas.
 
 
-
-Estrutura de pasta
+<!-- Estrutura de pasta
 .
 ├── Cargo.toml                  # Configuração do projeto e dependências
 ├── src/
@@ -35,7 +47,7 @@ Estrutura de pasta
 │   ├── middlewares/            # Middlewares para manipulação de requisições/respostas
 │   │   ├── mod.rs              
 │   │   ├── permission.rs       # Middleware para log de permissão ( no caso da hedro o ruskit faz isso )
-|   |   └── authentication.rs   # Middleware para validar authentificação ( no caso da hedro o ruskit faz isso)
+|   |   └── authentication.rs   # Middleware para validar authentificação ( no caso da hedro o ruskit faz isso) -->
 
 
 Estrutura de pasta

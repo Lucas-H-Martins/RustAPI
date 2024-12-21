@@ -1,6 +1,7 @@
 use utoipa::OpenApi;
 
-use crate::resources::users::{controllers as user_ctl, models as user_model};
+use crate::resources::users::controllers as user_ctl;
+use models::users as user_model;
 
 #[derive(OpenApi)]
 #[openapi(

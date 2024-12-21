@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = ["infrastructure", "commons", "bins/*"]
+members = ["repositories", "models", "infrastructure", "commons", "bins/*"]
 
 default-members = ["bins/*"]
 

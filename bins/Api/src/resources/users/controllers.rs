@@ -1,8 +1,7 @@
 use actix_web::{web::Json, HttpResponse, Responder};
+use models::users::{UserCreateRequest, UserCreateResponse};
 
 use crate::middlewares::validate::validate_input;
-
-use super::models::{UserCreateRequest, UserCreateResponse};
 
 #[utoipa::path(
     post,

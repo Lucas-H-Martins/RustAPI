@@ -1,6 +1,6 @@
 mod environment;
-mod logger;
+mod models;
 mod postgres;
 
-pub use environment::configure_env;
-pub use logger::configure_logger;
+pub use environment::Config;
+pub use postgres::{Database, PostgresDB};
